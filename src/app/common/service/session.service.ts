@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthConfig, OAuthErrorEvent, OAuthInfoEvent, OAuthService, OAuthSuccessEvent } from 'angular-oauth2-oidc';
 import { UserInSession } from '../data/user_in_session';
+import { Location } from '@angular/common';
 
 
 @Injectable({
@@ -19,7 +20,7 @@ export class SessionService {
   }
 
  
-  constructor(private oauthService: OAuthService , private router : Router) { 
+  constructor(private oauthService: OAuthService , private router : Router,private location: Location) { 
         this.initOAuthServiceForCodeFlow();
         let sUser = sessionStorage.getItem("session.userInSession");
         if(sUser) {
@@ -35,10 +36,10 @@ export class SessionService {
       // URL of the SPA to redirect the user to after login
       //redirectUri: window.location.origin + "/ngr-loggedIn",
 
-      silentRefreshRedirectUri: window.location.origin + "/silent-refresh.html",
+      silentRefreshRedirectUri: window.location.origin + this.location.prepareExternalUrl("/silent-refresh.html"),
       useSilentRefresh: true,
       
-      postLogoutRedirectUri : window.location.origin + "/ngr-logInOut", 
+      postLogoutRedirectUri : window.location.origin +  this.location.prepareExternalUrl("/ngr-logInOut"), 
       //ou /ngr-welcome ou ...
   
       // The SPA's id. The SPA is registered with this id at the auth-server
@@ -131,6 +132,10 @@ export class SessionService {
        //this.oauthService....
        this.oauthService.logOut(); //clear tokens in storage and redirect to logOutEndpoint
        //this.oauthService.revokeTokenAndLogout(); //warning : problems if no CORS settings !!!!
+
+       //delete old cookies (oauth2/oidc/keycloak):
+       document.cookie = "AUTH_SESSION_ID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+       document.cookie = "AUTH_SESSION_ID_LEGACY=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   }
 
  
