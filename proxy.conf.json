@@ -1,5 +1,5 @@
-{ "/devise-api" : { "secure" : false ,
-    "target" : "https://www.d-defrance.fr/tp" } ,
+{ "/tp/devise-api" : { "secure" : false ,
+    "target" : "https://www.d-defrance.fr" } ,
    "/user-api" : { "secure" : false ,
       "target" : "https://www.d-defrance.fr" }  
 }

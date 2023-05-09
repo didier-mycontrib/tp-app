@@ -29,8 +29,7 @@ export class DeviseService {
     return this._withoutSecurity;
   }
 
-  //private _apiBaseUrl ="http://localhost:8282/devise-api"; 
-  _apiBaseUrl ="/devise-api"; //with ng serve --proxy-config proxy.conf.json
+  _apiBaseUrl ="/tp/devise-api"; //with ng serve --proxy-config proxy.conf.json
   publicBaseUrl = `${this._apiBaseUrl}/public`;
   privateBaseUrl = `${this._apiBaseUrl}/private`;
   publicOrPrivateBaseUrl : string =this.privateBaseUrl; //with security by default
