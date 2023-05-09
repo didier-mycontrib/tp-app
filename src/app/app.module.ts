@@ -20,6 +20,11 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MyTogglePanelComponent } from './common/component/my-toggle-panel/my-toggle-panel.component';
 import { UserComponent } from './user/user.component';
+import { LogInOutComponent } from './log-in-out/log-in-out.component';
+import { ConversionComponent } from './conversion/conversion.component';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { OAuthModule } from 'angular-oauth2-oidc';
+import { MyAuthInterceptor } from './common/interceptor/my-auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -37,7 +42,9 @@ import { UserComponent } from './user/user.component';
     ListProdComponent,
     DeviseComponent,
     MyTogglePanelComponent,
-    UserComponent
+    UserComponent,
+    LogInOutComponent,
+    ConversionComponent
   ],
   imports: [
     BrowserModule,
@@ -45,8 +52,16 @@ import { UserComponent } from './user/user.component';
     AppRoutingModule,
     FormsModule,
     MatTabsModule,
+    HttpClientModule,
+    OAuthModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MyAuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

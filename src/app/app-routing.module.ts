@@ -5,6 +5,8 @@ import { DemoComponent } from './demo/demo.component';
 import { DeviseComponent } from './devise/devise.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { UserComponent } from './user/user.component';
+import { LogInOutComponent } from './log-in-out/log-in-out.component';
+import { ConversionComponent } from './conversion/conversion.component';
 
 const routes: Routes = [
   { path: 'ngr-welcome', component: WelcomeComponent },
@@ -12,7 +14,9 @@ const routes: Routes = [
   { path: 'ngr-user', component: UserComponent },
   { path: 'ngr-basic', component: BasicComponent },
   { path: 'ngr-devise', component: DeviseComponent },
-  { path: 'ngr-demo', component: DemoComponent }
+  { path: 'ngr-demo', component: DemoComponent },
+  { path: 'ngr-logInOut', component: LogInOutComponent },
+  { path: 'ngr-conversion', component: ConversionComponent }
 ];
 
 @NgModule({

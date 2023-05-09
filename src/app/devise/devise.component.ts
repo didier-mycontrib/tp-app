@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { Devise } from '../common/data/devise';
+import { DeviseService } from '../common/service/devise.service';
+import { messageFromError, messageFromEx } from '../common/util/util';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-devise',
@@ -12,6 +16,10 @@ export class DeviseComponent implements OnInit {
     return JSON.parse(JSON.stringify(d));
   }
 
+  identifyDevise(index:unknown, item:Devise){
+    return item.code; 
+ }
+
   tabDevises : Devise[] = [];
 
   selectedDevise : Devise | undefined;
@@ -23,31 +31,62 @@ export class DeviseComponent implements OnInit {
 
   mode : "newOne" | "existingOne" = "newOne";
 
-  constructor() {
-    //V1 (sans backend), avec des valeurs simulées en mémoire
-    this.tabDevises.push(new Devise("EUR","Euro",1));
-    this.tabDevises.push(new Devise("USD","Dollar",1.1));
-    this.tabDevises.push(new Devise("GBP","Livre",0.9));
-    this.tabDevises.push(new Devise("JPY","Yen",120));
-   }
-
-  ngOnInit(): void {
-  }
-
   onNew(){
     this.mode="newOne";
     this.selectedDevise=undefined;
     this.deviseTemp = new Devise();
-    this.message = "nouvelle devise à saisir ...";
   }
 
+  /*
   onAdd(){
-    this.tabDevises.push(this.deviseTemp);
-    this.onNew();
-    this.message = "devise peut être ajoutée";
+    this.deviseService.postDevise$(this.deviseTemp)
+    .subscribe(
+     { next: (savedDevise)=>{ this.message="devise ajoutée";
+                   this.addClientSide(savedDevise); } ,
+      error: (err)=>{ this.message = messageFromError(err,"echec post"); }
+   });
+  }
+  */
+
+  async onAdd(){
+    try{
+      const savedDevise = await firstValueFrom(this.deviseService.postDevise$(this.deviseTemp));
+      this.message="devise ajoutée";
+      this.addClientSide(savedDevise); 
+    }catch(ex){
+        this.message = messageFromEx(ex,"echec post"); 
+    }
   }
 
+  addClientSide(savedDevise:Devise){
+    this.tabDevises.push(savedDevise);
+    this.onNew();
+  }
+
+  /*
   onDelete(){
+    if(this.selectedDevise){
+         this.deviseService.deleteDeviseServerSide$(this.selectedDevise.code)
+             .subscribe(
+              { next: ()=>{ this.message="devise bien supprimée";
+                            this.deleteClientSide(); } ,
+               error: (err)=>{ this.message = messageFromError(err,"echec suppression"); }
+            });
+    }
+  }
+  */
+  async onDelete(){
+    if(!this.selectedDevise)return;
+    try{
+        await firstValueFrom(this.deviseService.deleteDeviseServerSide$(this.selectedDevise.code));
+        this.message="devise bien supprimée";
+        this.deleteClientSide();
+    }catch(ex){
+      this.message = messageFromEx(ex,"echec suppression"); 
+    }
+  }
+
+  deleteClientSide(){
     if(this.selectedDevise){
       let indexToDelete = -1;
       this.tabDevises.forEach((devise,index)=>{if(devise==this.selectedDevise) indexToDelete=index; });
@@ -56,21 +95,41 @@ export class DeviseComponent implements OnInit {
       }
     }
     this.onNew();
-    this.message = "devise peut être supprimée";
   }
 
+  /*
   onUpdate(){
-  //test imposé par typescript sur this.selectedDevise potentiellement undefined
-   if(this.selectedDevise != undefined){
-    //Rappel: this.selectedDevise est ici une référence
-    //qui pointe directement sur le i eme objet du tableau this.tabDevises
-    //(selon ligne sélectionnée)
-         this.selectedDevise.code = this.deviseTemp.code;
-         this.selectedDevise.name = this.deviseTemp.name;
-         this.selectedDevise.change = this.deviseTemp.change;
-         this.message = "devise mise à jour";
-   }
+    this.deviseService.putDevise$(this.deviseTemp)
+    .subscribe(
+     { next: (updatedDevise)=>{ this.message="devise bien mise à jour";
+                   this.updateClientSide(updatedDevise); } ,
+      error: (err)=>{ this.message = messageFromError(err,"echec update (put)");}
+   });
   }
+  */
+
+  async onUpdate(){
+    try{
+      const updatedDevise = await firstValueFrom(
+      this.deviseService.putDevise$(this.deviseTemp));
+      this.message="devise bien mise à jour";
+      this.updateClientSide(updatedDevise); 
+    }catch(ex){
+      this.message = messageFromEx(ex,"echec update (put)"); 
+    }
+  }
+
+  updateClientSide(updatedDevise:Devise){
+    //test imposé par typescript sur this.selectedDevise potentiellement undefined
+     if(this.selectedDevise != undefined){
+      //Rappel: this.selectedDevise est ici une référence
+      //qui pointe directement sur le i eme objet du tableau this.tabDevises
+      //(selon ligne sélectionnée)
+           this.selectedDevise.code = updatedDevise.code;
+           this.selectedDevise.name = updatedDevise.name;
+           this.selectedDevise.change = updatedDevise.change;
+     }
+    }
 
   //fonction évenementielle à appeler lorsque l'on
   //va sélectionner une des lignes du tableau
@@ -86,5 +145,26 @@ export class DeviseComponent implements OnInit {
       this.message = "devise selectionnée = " + JSON.stringify(this.selectedDevise);
   }
 
+  constructor(public deviseService : DeviseService) {
+    //injection de dépendance via constructeur
+    //V2 (avec backend , api-rest)
+   }
+
+   ngOnInit(): void {
+    this.fetchDevises();
+  }
+
+  async fetchDevises(){
+    try{
+      this.tabDevises = await firstValueFrom( 
+        this.deviseService.getAllDevises$()
+              .pipe(
+                map( (tabDev) => tabDev.sort((d1,d2)=>d1.change - d2.change) )
+              )
+        );
+    }catch(ex){
+      this.message = messageFromEx(ex,"echec rechercherDevises (get)"); 
+    }
+  }
 
 }
