@@ -1,8 +1,8 @@
-<a href="https://www.d-defrance.fr/keycloak/realms/sandboxrealm/.well-known/openid-configuration" target="_new">openid-configuration</a> (delete old cookies if necessary !!!) <br/>
+<a href="https://www.d-defrance.fr/keycloak/realms/sandboxrealm/.well-known/openid-configuration" target="_new">openid-configuration</a> &nbsp;<span class="redClass">(delete old cookies if necessary (login error) !!!)</span> <br/>
 LogInOut COMPONENT (login with OAuth2/OIDC keycloak server)<br/>
 <p>
     <button (click)="login()" class="btn btn-primary">Login</button> &nbsp;&nbsp;
-    <button (click)="logout()" class="btn btn-primary">Logout</button>
+    <button (click)="logout()" class="btn btn-primary">Logout</button> &nbsp;<span class="redClass">(if logout error, go back and try login)</span>
 </p>    
 <div>
  <p>exemples of good Username/Password:</p>
@@ -14,5 +14,5 @@ LogInOut COMPONENT (login with OAuth2/OIDC keycloak server)<br/>
    
 </div>
 <hr/>
-<!-- <a routerLink='/ngr-direct-login'> direct-login (without oauth2/oidc server)</a> &nbsp; -->
+ <a routerLink='/ngr-standalone-login'>direct/standalone login (without oauth2/oidc server)</a> &nbsp; 
 

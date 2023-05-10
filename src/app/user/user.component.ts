@@ -15,7 +15,7 @@ export class UserComponent {
   public existingUser = false; //true if getUserByUsername succeed before PUT , false before POST
   public message :string ="" ;
 
-  constructor(private userService : UserService){
+  constructor(public userService : UserService){
   }
 
   public async onSave(){

@@ -7,6 +7,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { UserComponent } from './user/user.component';
 import { LogInOutComponent } from './log-in-out/log-in-out.component';
 import { ConversionComponent } from './conversion/conversion.component';
+import { StandaloneLoginComponent } from './standalone-login/standalone-login.component';
 
 const routes: Routes = [
   { path: 'ngr-welcome', component: WelcomeComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'ngr-devise', component: DeviseComponent },
   { path: 'ngr-demo', component: DemoComponent },
   { path: 'ngr-logInOut', component: LogInOutComponent },
+  { path: 'ngr-standalone-login', component: StandaloneLoginComponent },
   { path: 'ngr-conversion', component: ConversionComponent }
 ];
 

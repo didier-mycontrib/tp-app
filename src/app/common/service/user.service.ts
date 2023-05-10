@@ -8,7 +8,18 @@ import { Observable } from 'rxjs';
 })
 export class UserService {
 
-  _apiBaseUrl ="/user-api"; //with ng serve --proxy-config proxy.conf.json
+  private _standalone = false;
+
+  public get standalone():boolean { return this._standalone; }
+  public set standalone(s:boolean) { 
+     this._standalone=s; 
+     this._apiBaseUrl=this._standalone?this._standaloneApiBaseUrl:this._remoteApiBaseUrl;
+     this.publicBaseUrl = `${this._apiBaseUrl}/public`;
+    }
+
+  _remoteApiBaseUrl ="/user-api"; //with ng serve --proxy-config proxy.conf.json
+  _standaloneApiBaseUrl ="/tp/standalone-user-api"; //with ng serve --proxy-config proxy.conf.json
+  _apiBaseUrl =this._remoteApiBaseUrl; //by default
   publicBaseUrl = `${this._apiBaseUrl}/public`;
 
   constructor(private _http : HttpClient) { }

@@ -25,6 +25,7 @@ import { ConversionComponent } from './conversion/conversion.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { MyAuthInterceptor } from './common/interceptor/my-auth.interceptor';
+import { StandaloneLoginComponent } from './standalone-login/standalone-login.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { MyAuthInterceptor } from './common/interceptor/my-auth.interceptor';
     MyTogglePanelComponent,
     UserComponent,
     LogInOutComponent,
-    ConversionComponent
+    ConversionComponent,
+    StandaloneLoginComponent
   ],
   imports: [
     BrowserModule,
