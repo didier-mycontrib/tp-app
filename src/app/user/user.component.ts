@@ -28,6 +28,7 @@ export class UserComponent {
       else{
           this.user = await firstValueFrom(this.userService.postUser$(this.user));
           this.message = "new user successfully added server side (POST)";
+          this.existingUser = true; //if post succeed , existingUser become true
       }
     }
     catch(ex){
@@ -41,6 +42,7 @@ export class UserComponent {
           await firstValueFrom(this.userService.deleteUserServerSide$(this.user.username));
           this.message = "existing user successfully deleted server side";
           this.user = new User();
+          this.existingUser = false; //if post succeed , existingUser become false
       }
     }
     catch(ex){
