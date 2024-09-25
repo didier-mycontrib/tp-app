@@ -17,8 +17,8 @@ export class UserService {
      this.publicBaseUrl = `${this._apiBaseUrl}/public`;
     }
 
-  _remoteApiBaseUrl ="/user-api"; //with ng serve --proxy-config proxy.conf.json
-  _standaloneApiBaseUrl ="/tp/standalone-user-api"; //with ng serve --proxy-config proxy.conf.json
+  _remoteApiBaseUrl ="/user-api/v1"; //with ng serve --proxy-config proxy.conf.json
+  _standaloneApiBaseUrl ="/tp/standalone-user-api/v1"; //with ng serve --proxy-config proxy.conf.json
   _apiBaseUrl =this._remoteApiBaseUrl; //by default
   publicBaseUrl = `${this._apiBaseUrl}/public`;
 
@@ -26,25 +26,25 @@ export class UserService {
 
 
   public getUserByUsername$(username:string) : Observable<User>{
-    const url = `${this.publicBaseUrl}/user/${username}`;
+    const url = `${this.publicBaseUrl}/users/${username}`;
     console.log( "url = " + url);
     return this._http.get<User>(url);
   }
 
   postUser$(u :User): Observable<User>{
-    const url = `${this.publicBaseUrl}/user`;
+    const url = `${this.publicBaseUrl}/users`;
     return this._http.post<User>(url,u /*input envoyé au serveur*/);
     //this.http.post<TypeReponseRetourneParServeur>(url_web_service , donnee_a_envoyer)
   }
 
   putUser$(u :User): Observable<User>{
-    const url = `${this.publicBaseUrl}/user`; 
+    const url = `${this.publicBaseUrl}/users/${u.username}`; 
     return this._http.put<User>(url,u /*input envoyé au serveur*/);
     //this.http.put<TypeReponseRetourneParServeur>(url_web_service , donnee_a_envoyer)
   }
 
   public deleteUserServerSide$(username : string):Observable<any>{
-    const url = `${this.publicBaseUrl}/user/${username}`;
+    const url = `${this.publicBaseUrl}/users/${username}`;
     console.log("deleteUrl=" + url );
     return this._http.delete<any>(url);
   }

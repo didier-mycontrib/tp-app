@@ -8,7 +8,7 @@ import { Observable, tap } from 'rxjs';
 })
 export class StandaloneLoginService {
 
-  private _apiBaseUrl ="/tp/standalone-login-api";
+  private _apiBaseUrl ="/tp/standalone-login-api/v1";
   constructor(private _http : HttpClient) { }
 
   public postLogin$(login: StandaloneLoginRequest): Observable<StandaloneLoginResponse>{
